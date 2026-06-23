@@ -73,7 +73,7 @@ function AppDemo(props) {
   }
 
   return (
-    <div style={{ background: "#0A0A0A", minHeight: "100vh", maxWidth: 430, margin: "0 auto", fontFamily: "sans-serif", position: "relative" }}>
+    <div style={{ background: "#0A0A0A", minHeight: "100vh", width: "100%", fontFamily: "sans-serif", position: "relative", boxSizing: "border-box" }}>
       <div style={{ position: "fixed", top: 8, left: "50%", transform: "translateX(-50%)", zIndex: 500, background: "rgba(255,214,10,0.15)", border: "1px solid rgba(255,214,10,0.4)", borderRadius: 20, padding: "5px 12px", display: "flex", gap: 8, alignItems: "center" }}>
         <span style={{ fontSize: 10, fontWeight: 800, color: "#FFD60A" }}>PREVIEW - TAP AROUND</span>
         <button onClick={onExit} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", fontSize: 10, textDecoration: "underline" }}>exit</button>
@@ -193,7 +193,7 @@ function WaitlistForm() {
 function Landing(props) {
   const onTryDemo = props.onTryDemo;
   return (
-    <div style={{ background: "#0A0A0A", minHeight: "100vh", maxWidth: 430, margin: "0 auto", fontFamily: "sans-serif", padding: "70px 24px 50px", textAlign: "center" }}>
+    <div style={{ background: "#0A0A0A", minHeight: "100vh", width: "100%", fontFamily: "sans-serif", padding: "70px 24px 50px", textAlign: "center", boxSizing: "border-box" }}>
       <div style={{ fontSize: 56, fontWeight: 900, color: "#fff", marginBottom: 4 }}>LIKE ❤️</div>
       <div style={{ fontSize: 16, color: "#fff", fontWeight: 700, marginBottom: 12 }}>No words. Just love.</div>
       <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.6, maxWidth: 320, margin: "0 auto 32px" }}>
