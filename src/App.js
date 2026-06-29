@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 const POSTS = [
-  { id: 1, user: "solange.wav", initial: "S", caption: "golden hour never misses", likes: 48200, liked: false, rank: 1, timeLeft: "4h left", shade: "#1a1a1a" },
-  { id: 2, user: "kai.renders", initial: "K", caption: "3am creative mode", likes: 31500, liked: false, rank: 2, timeLeft: "6h left", shade: "#262626" },
-  { id: 3, user: "zuri.jpeg", initial: "Z", caption: "summer energy only", likes: 22900, liked: false, rank: 3, timeLeft: "11h left", shade: "#0d0d0d" },
-  { id: 4, user: "nova.clips", initial: "N", caption: "they said it couldn't be done", likes: 18700, liked: false, rank: 4, timeLeft: "14h left", shade: "#2e2e2e" },
-  { id: 5, user: "drift.boy", initial: "D", caption: "vibes on vibes on vibes", likes: 9300, liked: false, rank: 5, timeLeft: "20h left", shade: "#161616" }
+  { id: 1, user: "solange.wav", initial: "S", caption: "golden hour never misses", likes: 48200, liked: false, rank: 1, timeLeft: "4h left", img: "https://i.postimg.cc/sXbRWwr7/sebastien-gabriel-IMlv9Jlb24-unsplash.jpg" },
+  { id: 2, user: "kai.renders", initial: "K", caption: "3am creative mode", likes: 31500, liked: false, rank: 2, timeLeft: "6h left", img: "https://i.postimg.cc/Y0Sm42tj/van-mendoza-r7YZXv5f5cc-unsplash.jpg" },
+  { id: 3, user: "zuri.jpeg", initial: "Z", caption: "summer energy only", likes: 22900, liked: false, rank: 3, timeLeft: "11h left", img: "https://i.postimg.cc/SNygrcxP/angelo-pantazis-h0An-GGgseio-unsplash.jpg" },
+  { id: 4, user: "nova.clips", initial: "N", caption: "they said it couldn't be done", likes: 18700, liked: false, rank: 4, timeLeft: "14h left", img: "https://i.postimg.cc/wjwZJ05q/pulkit-pithva-h2WT62cz-Fe-A-unsplash.jpg" },
+  { id: 5, user: "drift.boy", initial: "D", caption: "vibes on vibes on vibes", likes: 9300, liked: false, rank: 5, timeLeft: "20h left", img: "https://i.postimg.cc/xjm5Ytc7/jules-pt-CT-8q-Ze-Xx78-unsplash.jpg" }
 ];
 
 function fmt(n) {
@@ -81,17 +81,18 @@ function PostCard(props) {
       border: "1px solid " + t.line, boxShadow: t.shadowSoft
     }}>
       <div style={{
-        height: 230, background: post.shade, position: "relative",
-        display: "flex", alignItems: "flex-end", padding: 14
+        height: 280, position: "relative", overflow: "hidden",
+        backgroundImage: "url(" + post.img + ")",
+        backgroundSize: "cover", backgroundPosition: "center"
       }}>
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(165deg, transparent 40%, rgba(0,0,0,0.35) 100%)"
+          background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.55) 100%)"
         }} />
         {post.rank <= 3 ? (
           <div style={{
             position: "absolute", top: 14, left: 14,
-            background: "rgba(250,250,248,0.92)", color: "#0A0A0A",
+            background: "rgba(250,250,248,0.95)", color: "#0A0A0A",
             borderRadius: 100, padding: "4px 11px",
             fontSize: 10, fontWeight: 700, letterSpacing: "0.06em"
           }}>
@@ -100,8 +101,8 @@ function PostCard(props) {
         ) : null}
         <div style={{
           position: "absolute", top: 14, right: 14,
-          fontSize: 10, fontWeight: 600, color: "rgba(250,250,248,0.7)",
-          letterSpacing: "0.04em"
+          fontSize: 10, fontWeight: 600, color: "rgba(250,250,248,0.85)",
+          letterSpacing: "0.04em", textShadow: "0 1px 4px rgba(0,0,0,0.4)"
         }}>{post.timeLeft}</div>
       </div>
 
@@ -144,11 +145,11 @@ function Podium(props) {
         return (
           <div key={p.id} style={{ flex: 1, textAlign: "center" }}>
             <div style={{
-              width: 40, height: 40, borderRadius: "50%", background: t.ink, color: t.invertText,
-              display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 14,
-              margin: "0 auto 8px", border: i === 1 ? "2px solid " + t.ink : "none",
+              width: 40, height: 40, borderRadius: "50%", backgroundImage: "url(" + p.img + ")",
+              backgroundSize: "cover", backgroundPosition: "center",
+              margin: "0 auto 8px", border: i === 1 ? "2px solid " + t.ink : "1px solid " + t.line,
               boxShadow: i === 1 ? t.shadow : "none"
-            }}>{p.initial}</div>
+            }}></div>
             <div style={{
               height: heights[i], background: t.surfaceRaised, border: "1px solid " + t.line,
               borderRadius: "10px 10px 0 0", display: "flex", alignItems: "flex-start",
@@ -231,9 +232,9 @@ function AppDemo(props) {
                 }}>
                   <Serif style={{ width: 22, fontSize: 14, color: t.inkFaint }}>{i + 1}</Serif>
                   <div style={{
-                    width: 32, height: 32, borderRadius: "50%", background: t.ink, color: t.invertText,
-                    display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700
-                  }}>{p.initial}</div>
+                    width: 32, height: 32, borderRadius: "50%",
+                    backgroundImage: "url(" + p.img + ")", backgroundSize: "cover", backgroundPosition: "center"
+                  }}></div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: t.ink }}>@{p.user}</div>
                   </div>
