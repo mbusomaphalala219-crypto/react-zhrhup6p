@@ -81,13 +81,13 @@ function PostCard(props) {
       border: "1px solid " + t.line, boxShadow: t.shadowSoft
     }}>
       <div style={{
-        height: 280, position: "relative", overflow: "hidden",
+        height: 420, position: "relative", overflow: "hidden",
         backgroundImage: "url(" + post.img + ")",
         backgroundSize: "cover", backgroundPosition: "center"
       }}>
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.55) 100%)"
+          background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.65) 100%)"
         }} />
         {post.rank <= 3 ? (
           <div style={{
@@ -104,29 +104,104 @@ function PostCard(props) {
           fontSize: 10, fontWeight: 600, color: "rgba(250,250,248,0.85)",
           letterSpacing: "0.04em", textShadow: "0 1px 4px rgba(0,0,0,0.4)"
         }}>{post.timeLeft}</div>
+
+        <div style={{
+          position: "absolute", bottom: 0, left: 0, right: 0,
+          padding: "16px 16px 18px",
+          display: "flex", alignItems: "flex-end", justifyContent: "space-between"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: "50%", background: "rgba(255,255,255,0.2)",
+              backdropFilter: "blur(8px)", border: "1.5px solid rgba(255,255,255,0.4)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 13, fontWeight: 700, color: "#fff", flexShrink: 0
+            }}>{post.initial}</div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>@{post.user}</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.75)", marginTop: 1 }}>{post.caption}</div>
+            </div>
+          </div>
+          <button onClick={tap} style={{
+            background: "none", border: "none", cursor: post.liked ? "default" : "pointer", padding: 0,
+            display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
+            transform: pulse ? "scale(1.25)" : "scale(1)", transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1)"
+          }}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill={post.liked ? "#fff" : "none"} stroke="#fff" strokeWidth="1.8">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#fff", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>{fmt(post.likes)}</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ReelCard(props) {
+  const post = props.post;
+  const onLike = props.onLike;
+  const [pulse, setPulse] = useState(false);
+
+  function tap() {
+    if (post.liked) return;
+    setPulse(true);
+    setTimeout(function () { setPulse(false); }, 260);
+    onLike(post.id);
+  }
+
+  return (
+    <div style={{
+      height: "100vh", width: "100%", position: "relative", overflow: "hidden",
+      backgroundImage: "url(" + post.img + ")",
+      backgroundSize: "cover", backgroundPosition: "center",
+      flexShrink: 0, scrollSnapAlign: "start"
+    }}>
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 30%, transparent 50%, rgba(0,0,0,0.7) 100%)"
+      }} />
+
+      {post.rank <= 3 ? (
+        <div style={{
+          position: "absolute", top: 52, left: 16,
+          background: "rgba(250,250,248,0.95)", color: "#0A0A0A",
+          borderRadius: 100, padding: "4px 11px",
+          fontSize: 10, fontWeight: 700, letterSpacing: "0.06em"
+        }}>
+          No. {post.rank} TRENDING
+        </div>
+      ) : null}
+
+      <div style={{
+        position: "absolute", bottom: 80, left: 16, right: 70
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+          <div style={{
+            width: 38, height: 38, borderRadius: "50%",
+            background: "rgba(255,255,255,0.2)", backdropFilter: "blur(8px)",
+            border: "1.5px solid rgba(255,255,255,0.5)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 14, fontWeight: 700, color: "#fff"
+          }}>{post.initial}</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>@{post.user}</div>
+        </div>
+        <div style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.4 }}>{post.caption}</div>
       </div>
 
-      <div style={{ padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{
-            width: 34, height: 34, borderRadius: "50%", background: t.ink, color: t.invertText,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 13, fontWeight: 700, flexShrink: 0
-          }}>{post.initial}</div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: t.ink }}>@{post.user}</div>
-            <div style={{ fontSize: 11, color: t.inkSoft, marginTop: 1 }}>{post.caption}</div>
-          </div>
-        </div>
+      <div style={{
+        position: "absolute", bottom: 80, right: 16,
+        display: "flex", flexDirection: "column", alignItems: "center", gap: 20
+      }}>
         <button onClick={tap} style={{
-          background: "none", border: "none", cursor: post.liked ? "default" : "pointer", padding: 0,
-          display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
+          background: "none", border: "none", cursor: "pointer", padding: 0,
+          display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
           transform: pulse ? "scale(1.25)" : "scale(1)", transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1)"
         }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill={post.liked ? t.ink : "none"} stroke={post.liked ? t.ink : t.inkFaint} strokeWidth="1.8">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill={post.liked ? "#fff" : "none"} stroke="#fff" strokeWidth="1.8">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
           </svg>
-          <div style={{ fontSize: 11, fontWeight: 700, color: post.liked ? t.ink : t.inkFaint }}>{fmt(post.likes)}</div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>{fmt(post.likes)}</div>
         </button>
       </div>
     </div>
@@ -183,96 +258,125 @@ function AppDemo(props) {
 
   return (
     <div style={{ background: t.bg, minHeight: "100vh", width: "100%", fontFamily: "-apple-system, system-ui, sans-serif", boxSizing: "border-box" }}>
-      <div style={{
-        position: "fixed", top: 10, left: "50%", transform: "translateX(-50%)", zIndex: 500,
-        background: t.surfaceRaised, border: "1px solid " + t.lineStrong, borderRadius: 100,
-        padding: "6px 14px", display: "flex", gap: 10, alignItems: "center", boxShadow: t.shadow
-      }}>
-        <span style={{ fontSize: 10, fontWeight: 700, color: t.ink, letterSpacing: "0.06em" }}>PREVIEW</span>
-        <div style={{ width: 1, height: 10, background: t.line }} />
-        <button onClick={onExit} style={{ background: "none", border: "none", color: t.inkSoft, fontSize: 10, fontWeight: 600, cursor: "pointer" }}>Exit</button>
-      </div>
 
-      <div style={{ padding: "56px 20px 0", position: "sticky", top: 0, background: t.bg, zIndex: 100 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-          <Wordmark t={t} />
-          <ThemeToggle dark={dark} onToggle={toggle} t={t} />
-        </div>
-        <div style={{ display: "flex", gap: 24, borderBottom: "1px solid " + t.line }}>
-          <button onClick={function () { setTab("feed"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "feed" ? t.ink : t.inkFaint, borderBottom: tab === "feed" ? "2px solid " + t.ink : "2px solid transparent" }}>Feed</button>
-          <button onClick={function () { setTab("board"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "board" ? t.ink : t.inkFaint, borderBottom: tab === "board" ? "2px solid " + t.ink : "2px solid transparent" }}>Board</button>
-          <button onClick={function () { setTab("profile"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "profile" ? t.ink : t.inkFaint, borderBottom: tab === "profile" ? "2px solid " + t.ink : "2px solid transparent" }}>Profile</button>
-        </div>
-      </div>
-
-      <div style={{ padding: "20px 20px 50px", maxWidth: 480, margin: "0 auto" }}>
-        {tab === "feed" ? (
-          <div>
-            <div style={{
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-              marginBottom: 18, paddingBottom: 14, borderBottom: "1px solid " + t.line
-            }}>
-              <span style={{ fontSize: 11, color: t.inkSoft, fontWeight: 600, letterSpacing: "0.03em" }}>TODAY'S BOARD RESETS IN</span>
-              <Serif style={{ fontSize: 15, color: t.ink, fontWeight: 400 }}>04:32:17</Serif>
-            </div>
-            {posts.map(function (p) { return <PostCard key={p.id} post={p} onLike={like} t={t} />; })}
+      {tab !== "reels" ? (
+        <div>
+          <div style={{
+            position: "fixed", top: 10, left: "50%", transform: "translateX(-50%)", zIndex: 500,
+            background: t.surfaceRaised, border: "1px solid " + t.lineStrong, borderRadius: 100,
+            padding: "6px 14px", display: "flex", gap: 10, alignItems: "center", boxShadow: t.shadow
+          }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: t.ink, letterSpacing: "0.06em" }}>PREVIEW</span>
+            <div style={{ width: 1, height: 10, background: t.line }} />
+            <button onClick={onExit} style={{ background: "none", border: "none", color: t.inkSoft, fontSize: 10, fontWeight: 600, cursor: "pointer" }}>Exit</button>
           </div>
-        ) : null}
 
-        {tab === "board" ? (
-          <div>
-            <Serif style={{ fontSize: 26, color: t.ink, display: "block", marginBottom: 4 }}>Today's Board</Serif>
-            <div style={{ fontSize: 12, color: t.inkSoft, marginBottom: 8 }}>Resets at midnight, anyone can reach the top</div>
-            <Podium posts={posts} t={t} />
-            {posts.map(function (p, i) {
-              return (
-                <div key={p.id} style={{
-                  display: "flex", alignItems: "center", gap: 12, padding: "13px 0",
-                  borderBottom: "1px solid " + t.line
+          <div style={{ padding: "56px 20px 0", position: "sticky", top: 0, background: t.bg, zIndex: 100 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+              <Wordmark t={t} />
+              <ThemeToggle dark={dark} onToggle={toggle} t={t} />
+            </div>
+            <div style={{ display: "flex", gap: 24, borderBottom: "1px solid " + t.line }}>
+              <button onClick={function () { setTab("feed"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "feed" ? t.ink : t.inkFaint, borderBottom: tab === "feed" ? "2px solid " + t.ink : "2px solid transparent" }}>Feed</button>
+              <button onClick={function () { setTab("reels"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "reels" ? t.ink : t.inkFaint, borderBottom: tab === "reels" ? "2px solid " + t.ink : "2px solid transparent" }}>Reels</button>
+              <button onClick={function () { setTab("board"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "board" ? t.ink : t.inkFaint, borderBottom: tab === "board" ? "2px solid " + t.ink : "2px solid transparent" }}>Board</button>
+              <button onClick={function () { setTab("profile"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "profile" ? t.ink : t.inkFaint, borderBottom: tab === "profile" ? "2px solid " + t.ink : "2px solid transparent" }}>Profile</button>
+            </div>
+          </div>
+
+          <div style={{ padding: "20px 20px 50px", maxWidth: 480, margin: "0 auto" }}>
+            {tab === "feed" ? (
+              <div>
+                <div style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  marginBottom: 18, paddingBottom: 14, borderBottom: "1px solid " + t.line
                 }}>
-                  <Serif style={{ width: 22, fontSize: 14, color: t.inkFaint }}>{i + 1}</Serif>
-                  <div style={{
-                    width: 32, height: 32, borderRadius: "50%",
-                    backgroundImage: "url(" + p.img + ")", backgroundSize: "cover", backgroundPosition: "center"
-                  }}></div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: t.ink }}>@{p.user}</div>
-                  </div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: t.ink }}>{fmt(p.likes)}</div>
+                  <span style={{ fontSize: 11, color: t.inkSoft, fontWeight: 600, letterSpacing: "0.03em" }}>TODAY'S BOARD RESETS IN</span>
+                  <Serif style={{ fontSize: 15, color: t.ink, fontWeight: 400 }}>04:32:17</Serif>
                 </div>
-              );
+                {posts.map(function (p) { return <PostCard key={p.id} post={p} onLike={like} t={t} />; })}
+              </div>
+            ) : null}
+
+            {tab === "board" ? (
+              <div>
+                <Serif style={{ fontSize: 26, color: t.ink, display: "block", marginBottom: 4 }}>Today's Board</Serif>
+                <div style={{ fontSize: 12, color: t.inkSoft, marginBottom: 8 }}>Resets at midnight, anyone can reach the top</div>
+                <Podium posts={posts} t={t} />
+                {posts.map(function (p, i) {
+                  return (
+                    <div key={p.id} style={{
+                      display: "flex", alignItems: "center", gap: 12, padding: "13px 0",
+                      borderBottom: "1px solid " + t.line
+                    }}>
+                      <Serif style={{ width: 22, fontSize: 14, color: t.inkFaint }}>{i + 1}</Serif>
+                      <div style={{
+                        width: 32, height: 32, borderRadius: "50%",
+                        backgroundImage: "url(" + p.img + ")", backgroundSize: "cover", backgroundPosition: "center"
+                      }}></div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: t.ink }}>@{p.user}</div>
+                      </div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: t.ink }}>{fmt(p.likes)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+
+            {tab === "profile" ? (
+              <div style={{ textAlign: "center", paddingTop: 20 }}>
+                <div style={{
+                  width: 76, height: 76, borderRadius: "50%", background: t.ink, color: t.invertText,
+                  display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 700,
+                  margin: "0 auto 16px", boxShadow: t.shadow
+                }}>Y</div>
+                <Serif style={{ fontSize: 20, color: t.ink, display: "block", marginBottom: 6 }}>@you</Serif>
+                <div style={{ fontSize: 12, color: t.inkSoft, maxWidth: 240, margin: "0 auto", lineHeight: 1.5 }}>
+                  This is what your profile looks like, once LIKE launches.
+                </div>
+                <div style={{ display: "flex", justifyContent: "center", gap: 32, marginTop: 28 }}>
+                  <div>
+                    <Serif style={{ fontSize: 20, color: t.ink, display: "block" }}>0</Serif>
+                    <div style={{ fontSize: 10, color: t.inkFaint, marginTop: 2 }}>Posts</div>
+                  </div>
+                  <div>
+                    <Serif style={{ fontSize: 20, color: t.ink, display: "block" }}>{posts.filter(function (p) { return p.liked; }).length}</Serif>
+                    <div style={{ fontSize: 10, color: t.inkFaint, marginTop: 2 }}>Likes given</div>
+                  </div>
+                  <div>
+                    <Serif style={{ fontSize: 20, color: t.ink, display: "block" }}>0</Serif>
+                    <div style={{ fontSize: 10, color: t.inkFaint, marginTop: 2 }}>Trended</div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : (
+        <div style={{ position: "relative" }}>
+          <div style={{
+            position: "fixed", top: 16, left: 16, zIndex: 500,
+            display: "flex", gap: 12, alignItems: "center"
+          }}>
+            <button onClick={function () { setTab("feed"); }} style={{
+              background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.2)", borderRadius: 100,
+              padding: "6px 14px", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer"
+            }}>Back</button>
+            <Serif style={{ fontSize: 18, color: "#fff", fontWeight: 400 }}>Reels</Serif>
+          </div>
+
+          <div style={{
+            height: "100vh", overflowY: "scroll",
+            scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch"
+          }}>
+            {posts.map(function (p) {
+              return <ReelCard key={p.id} post={p} onLike={like} />;
             })}
           </div>
-        ) : null}
-
-        {tab === "profile" ? (
-          <div style={{ textAlign: "center", paddingTop: 20 }}>
-            <div style={{
-              width: 76, height: 76, borderRadius: "50%", background: t.ink, color: t.invertText,
-              display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 700,
-              margin: "0 auto 16px", boxShadow: t.shadow
-            }}>Y</div>
-            <Serif style={{ fontSize: 20, color: t.ink, display: "block", marginBottom: 6 }}>@you</Serif>
-            <div style={{ fontSize: 12, color: t.inkSoft, maxWidth: 240, margin: "0 auto", lineHeight: 1.5 }}>
-              This is what your profile looks like, once LIKE launches.
-            </div>
-            <div style={{ display: "flex", justifyContent: "center", gap: 32, marginTop: 28 }}>
-              <div>
-                <Serif style={{ fontSize: 20, color: t.ink, display: "block" }}>0</Serif>
-                <div style={{ fontSize: 10, color: t.inkFaint, marginTop: 2 }}>Posts</div>
-              </div>
-              <div>
-                <Serif style={{ fontSize: 20, color: t.ink, display: "block" }}>{posts.filter(function (p) { return p.liked; }).length}</Serif>
-                <div style={{ fontSize: 10, color: t.inkFaint, marginTop: 2 }}>Likes given</div>
-              </div>
-              <div>
-                <Serif style={{ fontSize: 20, color: t.ink, display: "block" }}>0</Serif>
-                <div style={{ fontSize: 10, color: t.inkFaint, marginTop: 2 }}>Trended</div>
-              </div>
-            </div>
-          </div>
-        ) : null}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
