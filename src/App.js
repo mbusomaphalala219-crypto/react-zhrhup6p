@@ -1,11 +1,13 @@
 import { useState } from "react";
 
+const CATEGORIES = ["All", "Music", "Fashion", "Travel", "Food", "Art", "Fitness", "Comedy", "Film", "Vibes"];
+
 const POSTS = [
-  { id: 1, user: "solange.wav", initial: "S", caption: "golden hour never misses", likes: 48200, liked: false, rank: 1, timeLeft: "4h left", img: "https://i.postimg.cc/sXbRWwr7/sebastien-gabriel-IMlv9Jlb24-unsplash.jpg" },
-  { id: 2, user: "kai.renders", initial: "K", caption: "3am creative mode", likes: 31500, liked: false, rank: 2, timeLeft: "6h left", img: "https://i.postimg.cc/Y0Sm42tj/van-mendoza-r7YZXv5f5cc-unsplash.jpg" },
-  { id: 3, user: "zuri.jpeg", initial: "Z", caption: "summer energy only", likes: 22900, liked: false, rank: 3, timeLeft: "11h left", img: "https://i.postimg.cc/SNygrcxP/angelo-pantazis-h0An-GGgseio-unsplash.jpg" },
-  { id: 4, user: "nova.clips", initial: "N", caption: "they said it couldn't be done", likes: 18700, liked: false, rank: 4, timeLeft: "14h left", img: "https://i.postimg.cc/wjwZJ05q/pulkit-pithva-h2WT62cz-Fe-A-unsplash.jpg" },
-  { id: 5, user: "drift.boy", initial: "D", caption: "vibes on vibes on vibes", likes: 9300, liked: false, rank: 5, timeLeft: "20h left", img: "https://i.postimg.cc/xjm5Ytc7/jules-pt-CT-8q-Ze-Xx78-unsplash.jpg" }
+  { id: 1, user: "solange.wav", initial: "S", caption: "golden hour never misses", likes: 48200, liked: false, rank: 1, timeLeft: "4h left", img: "https://i.postimg.cc/sXbRWwr7/sebastien-gabriel-IMlv9Jlb24-unsplash.jpg", category: "Vibes" },
+  { id: 2, user: "kai.renders", initial: "K", caption: "3am creative mode", likes: 31500, liked: false, rank: 2, timeLeft: "6h left", img: "https://i.postimg.cc/Y0Sm42tj/van-mendoza-r7YZXv5f5cc-unsplash.jpg", category: "Art" },
+  { id: 3, user: "zuri.jpeg", initial: "Z", caption: "summer energy only", likes: 22900, liked: false, rank: 3, timeLeft: "11h left", img: "https://i.postimg.cc/SNygrcxP/angelo-pantazis-h0An-GGgseio-unsplash.jpg", category: "Travel" },
+  { id: 4, user: "nova.clips", initial: "N", caption: "they said it couldn't be done", likes: 18700, liked: false, rank: 4, timeLeft: "14h left", img: "https://i.postimg.cc/wjwZJ05q/pulkit-pithva-h2WT62cz-Fe-A-unsplash.jpg", category: "Fitness" },
+  { id: 5, user: "drift.boy", initial: "D", caption: "vibes on vibes on vibes", likes: 9300, liked: false, rank: 5, timeLeft: "20h left", img: "https://i.postimg.cc/xjm5Ytc7/jules-pt-CT-8q-Ze-Xx78-unsplash.jpg", category: "Music" }
 ];
 
 function fmt(n) {
@@ -62,6 +64,32 @@ function Wordmark(props) {
   );
 }
 
+function CategoryPills(props) {
+  const active = props.active;
+  const onSelect = props.onSelect;
+  const t = props.t;
+  return (
+    <div style={{
+      display: "flex", gap: 8, overflowX: "auto", paddingBottom: 12,
+      scrollbarWidth: "none", msOverflowStyle: "none"
+    }}>
+      {CATEGORIES.map(function (cat) {
+        const isActive = active === cat;
+        return (
+          <button key={cat} onClick={function () { onSelect(cat); }} style={{
+            flexShrink: 0, background: isActive ? t.ink : "transparent",
+            border: "1px solid " + (isActive ? t.ink : t.lineStrong),
+            borderRadius: 100, padding: "6px 14px",
+            fontSize: 11, fontWeight: 700, cursor: "pointer",
+            color: isActive ? t.invertText : t.inkSoft,
+            letterSpacing: "0.03em", transition: "all 0.18s ease"
+          }}>{cat.toUpperCase()}</button>
+        );
+      })}
+    </div>
+  );
+}
+
 function PostCard(props) {
   const post = props.post;
   const onLike = props.onLike;
@@ -89,16 +117,26 @@ function PostCard(props) {
           position: "absolute", inset: 0,
           background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.65) 100%)"
         }} />
+
+        {/* Category tag */}
+        <div style={{
+          position: "absolute", top: 14, left: 14,
+          background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)",
+          borderRadius: 100, padding: "4px 11px",
+          fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.9)", letterSpacing: "0.06em"
+        }}>{post.category.toUpperCase()}</div>
+
         {post.rank <= 3 ? (
           <div style={{
-            position: "absolute", top: 14, left: 14,
+            position: "absolute", top: 14, left: 14, marginTop: 28,
             background: "rgba(250,250,248,0.95)", color: "#0A0A0A",
-            borderRadius: 100, padding: "4px 11px",
+            borderRadius: 100, padding: "4px 11px", marginLeft: 0,
             fontSize: 10, fontWeight: 700, letterSpacing: "0.06em"
           }}>
             No. {post.rank} TRENDING
           </div>
         ) : null}
+
         <div style={{
           position: "absolute", top: 14, right: 14,
           fontSize: 10, fontWeight: 600, color: "rgba(250,250,248,0.85)",
@@ -162,9 +200,16 @@ function ReelCard(props) {
         background: "linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 30%, transparent 50%, rgba(0,0,0,0.7) 100%)"
       }} />
 
+      <div style={{
+        position: "absolute", top: 52, left: 16,
+        background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)",
+        borderRadius: 100, padding: "4px 11px",
+        fontSize: 10, fontWeight: 700, color: "#fff", letterSpacing: "0.06em"
+      }}>{post.category.toUpperCase()}</div>
+
       {post.rank <= 3 ? (
         <div style={{
-          position: "absolute", top: 52, left: 16,
+          position: "absolute", top: 82, left: 16,
           background: "rgba(250,250,248,0.95)", color: "#0A0A0A",
           borderRadius: 100, padding: "4px 11px",
           fontSize: 10, fontWeight: 700, letterSpacing: "0.06em"
@@ -173,9 +218,7 @@ function ReelCard(props) {
         </div>
       ) : null}
 
-      <div style={{
-        position: "absolute", bottom: 80, left: 16, right: 70
-      }}>
+      <div style={{ position: "absolute", bottom: 80, left: 16, right: 70 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
           <div style={{
             width: 38, height: 38, borderRadius: "50%",
@@ -214,6 +257,7 @@ function Podium(props) {
   const order = [posts[1], posts[0], posts[2]];
   const heights = [78, 108, 60];
   const labels = ["II", "I", "III"];
+  if (!order[0] || !order[1] || !order[2]) return null;
   return (
     <div style={{ display: "flex", alignItems: "flex-end", gap: 8, marginBottom: 28, paddingTop: 20 }}>
       {order.map(function (p, i) {
@@ -240,6 +284,56 @@ function Podium(props) {
   );
 }
 
+function CategoryLeaderboard(props) {
+  const posts = props.posts;
+  const t = props.t;
+  const cats = CATEGORIES.filter(function (c) { return c !== "All"; });
+  return (
+    <div>
+      {cats.map(function (cat) {
+        const catPosts = posts.filter(function (p) { return p.category === cat; });
+        if (catPosts.length === 0) return null;
+        const top = catPosts[0];
+        return (
+          <div key={cat} style={{
+            background: t.surface, borderRadius: 16, marginBottom: 12,
+            border: "1px solid " + t.line, overflow: "hidden"
+          }}>
+            <div style={{
+              height: 90, backgroundImage: "url(" + top.img + ")",
+              backgroundSize: "cover", backgroundPosition: "center", position: "relative"
+            }}>
+              <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} />
+              <div style={{
+                position: "absolute", bottom: 10, left: 12,
+                fontSize: 13, fontWeight: 800, color: "#fff", letterSpacing: "0.04em"
+              }}>{cat.toUpperCase()}</div>
+              <div style={{
+                position: "absolute", bottom: 10, right: 12,
+                fontSize: 10, color: "rgba(255,255,255,0.7)", fontWeight: 600
+              }}>{catPosts.length} post{catPosts.length > 1 ? "s" : ""}</div>
+            </div>
+            <div style={{ padding: "10px 12px" }}>
+              <div style={{ fontSize: 10, color: t.inkFaint, fontWeight: 700, marginBottom: 6, letterSpacing: "0.05em" }}>No. 1 IN {cat.toUpperCase()}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: "50%", backgroundImage: "url(" + top.img + ")",
+                  backgroundSize: "cover", backgroundPosition: "center", flexShrink: 0
+                }}></div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: t.ink }}>@{top.user}</div>
+                  <div style={{ fontSize: 10, color: t.inkSoft }}>{top.caption}</div>
+                </div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: t.ink }}>{fmt(top.likes)}</div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function AppDemo(props) {
   const dark = props.dark;
   const toggle = props.toggle;
@@ -247,6 +341,8 @@ function AppDemo(props) {
   const t = theme(dark);
   const [posts, setPosts] = useState(POSTS);
   const [tab, setTab] = useState("feed");
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [boardView, setBoardView] = useState("global");
 
   function like(id) {
     setPosts(function (prev) {
@@ -255,6 +351,10 @@ function AppDemo(props) {
       });
     });
   }
+
+  const filteredPosts = activeCategory === "All"
+    ? posts
+    : posts.filter(function (p) { return p.category === activeCategory; });
 
   return (
     <div style={{ background: t.bg, minHeight: "100vh", width: "100%", fontFamily: "-apple-system, system-ui, sans-serif", boxSizing: "border-box" }}>
@@ -276,213 +376,60 @@ function AppDemo(props) {
               <Wordmark t={t} />
               <ThemeToggle dark={dark} onToggle={toggle} t={t} />
             </div>
-            <div style={{ display: "flex", gap: 24, borderBottom: "1px solid " + t.line }}>
-              <button onClick={function () { setTab("feed"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "feed" ? t.ink : t.inkFaint, borderBottom: tab === "feed" ? "2px solid " + t.ink : "2px solid transparent" }}>Feed</button>
-              <button onClick={function () { setTab("reels"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "reels" ? t.ink : t.inkFaint, borderBottom: tab === "reels" ? "2px solid " + t.ink : "2px solid transparent" }}>Reels</button>
-              <button onClick={function () { setTab("board"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "board" ? t.ink : t.inkFaint, borderBottom: tab === "board" ? "2px solid " + t.ink : "2px solid transparent" }}>Board</button>
-              <button onClick={function () { setTab("profile"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 600, color: tab === "profile" ? t.ink : t.inkFaint, borderBottom: tab === "profile" ? "2px solid " + t.ink : "2px solid transparent" }}>Profile</button>
+            <div style={{ display: "flex", gap: 20, borderBottom: "1px solid " + t.line, marginBottom: 0 }}>
+              {[["feed", "Feed"], ["reels", "Reels"], ["board", "Board"], ["profile", "Profile"]].map(function (item) {
+                return (
+                  <button key={item[0]} onClick={function () { setTab(item[0]); }} style={{
+                    background: "none", border: "none", cursor: "pointer", padding: "10px 0",
+                    fontSize: 13, fontWeight: 600, whiteSpace: "nowrap",
+                    color: tab === item[0] ? t.ink : t.inkFaint,
+                    borderBottom: tab === item[0] ? "2px solid " + t.ink : "2px solid transparent"
+                  }}>{item[1]}</button>
+                );
+              })}
             </div>
+
+            {tab === "feed" ? (
+              <div style={{ paddingTop: 14 }}>
+                <CategoryPills active={activeCategory} onSelect={setActiveCategory} t={t} />
+              </div>
+            ) : null}
           </div>
 
-          <div style={{ padding: "20px 20px 50px", maxWidth: 480, margin: "0 auto" }}>
+          <div style={{ padding: "12px 20px 50px", maxWidth: 480, margin: "0 auto" }}>
             {tab === "feed" ? (
               <div>
                 <div style={{
                   display: "flex", justifyContent: "space-between", alignItems: "center",
-                  marginBottom: 18, paddingBottom: 14, borderBottom: "1px solid " + t.line
+                  marginBottom: 16, paddingBottom: 14, borderBottom: "1px solid " + t.line
                 }}>
-                  <span style={{ fontSize: 11, color: t.inkSoft, fontWeight: 600, letterSpacing: "0.03em" }}>TODAY'S BOARD RESETS IN</span>
+                  <span style={{ fontSize: 11, color: t.inkSoft, fontWeight: 600, letterSpacing: "0.03em" }}>
+                    {activeCategory === "All" ? "TODAY'S BOARD RESETS IN" : activeCategory.toUpperCase() + " · RESETS IN"}
+                  </span>
                   <Serif style={{ fontSize: 15, color: t.ink, fontWeight: 400 }}>04:32:17</Serif>
                 </div>
-                {posts.map(function (p) { return <PostCard key={p.id} post={p} onLike={like} t={t} />; })}
+                {filteredPosts.length > 0 ? (
+                  filteredPosts.map(function (p) { return <PostCard key={p.id} post={p} onLike={like} t={t} />; })
+                ) : (
+                  <div style={{ textAlign: "center", padding: "60px 0" }}>
+                    <div style={{ fontSize: 32, marginBottom: 12 }}>🤍</div>
+                    <div style={{ fontSize: 14, color: t.inkSoft }}>No posts in {activeCategory} yet.</div>
+                    <div style={{ fontSize: 12, color: t.inkFaint, marginTop: 6 }}>Be the first to trend here.</div>
+                  </div>
+                )}
               </div>
             ) : null}
 
             {tab === "board" ? (
               <div>
-                <Serif style={{ fontSize: 26, color: t.ink, display: "block", marginBottom: 4 }}>Today's Board</Serif>
-                <div style={{ fontSize: 12, color: t.inkSoft, marginBottom: 8 }}>Resets at midnight, anyone can reach the top</div>
-                <Podium posts={posts} t={t} />
-                {posts.map(function (p, i) {
-                  return (
-                    <div key={p.id} style={{
-                      display: "flex", alignItems: "center", gap: 12, padding: "13px 0",
-                      borderBottom: "1px solid " + t.line
-                    }}>
-                      <Serif style={{ width: 22, fontSize: 14, color: t.inkFaint }}>{i + 1}</Serif>
-                      <div style={{
-                        width: 32, height: 32, borderRadius: "50%",
-                        backgroundImage: "url(" + p.img + ")", backgroundSize: "cover", backgroundPosition: "center"
-                      }}></div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: t.ink }}>@{p.user}</div>
-                      </div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: t.ink }}>{fmt(p.likes)}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : null}
-
-            {tab === "profile" ? (
-              <div style={{ textAlign: "center", paddingTop: 20 }}>
-                <div style={{
-                  width: 76, height: 76, borderRadius: "50%", background: t.ink, color: t.invertText,
-                  display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 700,
-                  margin: "0 auto 16px", boxShadow: t.shadow
-                }}>Y</div>
-                <Serif style={{ fontSize: 20, color: t.ink, display: "block", marginBottom: 6 }}>@you</Serif>
-                <div style={{ fontSize: 12, color: t.inkSoft, maxWidth: 240, margin: "0 auto", lineHeight: 1.5 }}>
-                  This is what your profile looks like, once LIKE launches.
-                </div>
-                <div style={{ display: "flex", justifyContent: "center", gap: 32, marginTop: 28 }}>
-                  <div>
-                    <Serif style={{ fontSize: 20, color: t.ink, display: "block" }}>0</Serif>
-                    <div style={{ fontSize: 10, color: t.inkFaint, marginTop: 2 }}>Posts</div>
-                  </div>
-                  <div>
-                    <Serif style={{ fontSize: 20, color: t.ink, display: "block" }}>{posts.filter(function (p) { return p.liked; }).length}</Serif>
-                    <div style={{ fontSize: 10, color: t.inkFaint, marginTop: 2 }}>Likes given</div>
-                  </div>
-                  <div>
-                    <Serif style={{ fontSize: 20, color: t.ink, display: "block" }}>0</Serif>
-                    <div style={{ fontSize: 10, color: t.inkFaint, marginTop: 2 }}>Trended</div>
-                  </div>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </div>
-      ) : (
-        <div style={{ position: "relative" }}>
-          <div style={{
-            position: "fixed", top: 16, left: 16, zIndex: 500,
-            display: "flex", gap: 12, alignItems: "center"
-          }}>
-            <button onClick={function () { setTab("feed"); }} style={{
-              background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)",
-              border: "1px solid rgba(255,255,255,0.2)", borderRadius: 100,
-              padding: "6px 14px", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer"
-            }}>Back</button>
-            <Serif style={{ fontSize: 18, color: "#fff", fontWeight: 400 }}>Reels</Serif>
-          </div>
-
-          <div style={{
-            height: "100vh", overflowY: "scroll",
-            scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch"
-          }}>
-            {posts.map(function (p) {
-              return <ReelCard key={p.id} post={p} onLike={like} />;
-            })}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function WaitlistForm(props) {
-  const t = props.t;
-  const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
-
-  function submit(e) {
-    e.preventDefault();
-    setLoading(true);
-    setErr("");
-    fetch("https://formspree.io/f/mpqgawpa", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email })
-    }).then(function (r) {
-      if (r.ok) { setDone(true); } else { setErr("Something went wrong, try again."); }
-    }).catch(function () {
-      setErr("Something went wrong, try again.");
-    }).finally(function () {
-      setLoading(false);
-    });
-  }
-
-  if (done) {
-    return (
-      <div style={{ textAlign: "center", padding: "8px 0" }}>
-        <Serif style={{ fontSize: 16, color: t.ink, display: "block" }}>You're on the list.</Serif>
-        <div style={{ fontSize: 11, color: t.inkSoft, marginTop: 4 }}>We'll be in touch.</div>
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={submit} style={{ width: "100%", maxWidth: 360, margin: "0 auto" }}>
-      <div style={{ display: "flex", gap: 0, borderBottom: "1.5px solid " + t.lineStrong, paddingBottom: 10 }}>
-        <input
-          type="email" required value={email}
-          onChange={function (e) { setEmail(e.target.value); }}
-          placeholder="your@email.com"
-          style={{
-            flex: 1, background: "transparent", border: "none", outline: "none",
-            fontSize: 14, color: t.ink, fontFamily: "inherit", padding: "4px 0"
-          }}
-        />
-        <button type="submit" disabled={loading} style={{
-          background: "none", border: "none", cursor: "pointer",
-          fontSize: 12, fontWeight: 700, color: t.ink, letterSpacing: "0.04em"
-        }}>{loading ? "..." : "JOIN"}</button>
-      </div>
-      {err ? <div style={{ fontSize: 11, color: t.inkSoft, marginTop: 8 }}>{err}</div> : null}
-    </form>
-  );
-}
-
-function Landing(props) {
-  const dark = props.dark;
-  const toggle = props.toggle;
-  const onTryDemo = props.onTryDemo;
-  const t = theme(dark);
-  return (
-    <div style={{ background: t.bg, minHeight: "100vh", width: "100%", fontFamily: "-apple-system, system-ui, sans-serif", boxSizing: "border-box" }}>
-      <div style={{ padding: "24px 24px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Wordmark t={t} size={18} />
-        <ThemeToggle dark={dark} onToggle={toggle} t={t} />
-      </div>
-
-      <div style={{ padding: "60px 28px 60px", textAlign: "center", maxWidth: 480, margin: "0 auto" }}>
-        <Serif style={{ fontSize: 52, color: t.ink, lineHeight: 1.02, display: "block", marginBottom: 18 }}>
-          No words.<br />Just love.
-        </Serif>
-        <p style={{ fontSize: 14, color: t.inkSoft, lineHeight: 1.7, maxWidth: 320, margin: "0 auto 36px" }}>
-          A social network where the only interaction is a like.
-          No comments. No followers. No dislikes. Every post competes
-          on a leaderboard that resets every 24 hours.
-        </p>
-
-        <button onClick={onTryDemo} style={{
-          background: t.invert, color: t.invertText, border: "none", borderRadius: 100,
-          padding: "15px 34px", fontSize: 14, fontWeight: 700, cursor: "pointer",
-          boxShadow: t.shadow, marginBottom: 10
-        }}>Try the app</button>
-        <div style={{ fontSize: 11, color: t.inkFaint, marginBottom: 56 }}>A real feed. A real leaderboard. Tap around.</div>
-
-        <div style={{ width: 32, height: 1, background: t.lineStrong, margin: "0 auto 28px" }} />
-
-        <div style={{ fontSize: 12, color: t.inkSoft, fontWeight: 600, marginBottom: 18, letterSpacing: "0.02em" }}>
-          Get first access when LIKE fully launches
-        </div>
-        <WaitlistForm t={t} />
-      </div>
-    </div>
-  );
-}
-
-export default function App() {
-  const [dark, setDark] = useState(true);
-  const [view, setView] = useState("landing");
-  function toggle() { setDark(function (d) { return !d; }); }
-
-  if (view === "demo") {
-    return <AppDemo dark={dark} toggle={toggle} onExit={function () { setView("landing"); }} />;
-  }
-  return <Landing dark={dark} toggle={toggle} onTryDemo={function () { setView("demo"); }} />;
-}
+                <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+                  <button onClick={function () { setBoardView("global"); }} style={{
+                    flex: 1, background: boardView === "global" ? t.ink : "transparent",
+                    border: "1px solid " + t.lineStrong, borderRadius: 100, padding: "8px 0",
+                    fontSize: 11, fontWeight: 700, cursor: "pointer",
+                    color: boardView === "global" ? t.invertText : t.inkSoft
+                  }}>GLOBAL</button>
+                  <button onClick={function () { setBoardView("category"); }} style={{
+                    flex: 1, background: boardView === "category" ? t.ink : "transparent",
+                    border: "1px solid " + t.lineStrong, borderRadius: 100, padding: "8px 0",
+                    fontSiz
