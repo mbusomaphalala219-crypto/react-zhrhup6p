@@ -134,6 +134,10 @@ function AuthScreen(props) {
           </button>
         </form>
       </div>
+
+      <div style={{ position: "absolute", bottom: 24, fontSize: 11, color: t.inkFaint, textAlign: "center" }}>
+        © 2026 Mbuso Maphalala. All rights reserved.
+      </div>
     </div>
   );
 }
@@ -245,13 +249,7 @@ function CreatePost(props) {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {CATEGORIES.filter(function (c) { return c !== "All"; }).map(function (cat) {
               return (
-                <button key={cat} type="button" onClick={function () { setCategory(cat); }} style={{
-                  background: category === cat ? t.ink : "transparent",
-                  border: "1px solid " + (category === cat ? t.ink : t.lineStrong),
-                  borderRadius: 100, padding: "6px 14px",
-                  fontSize: 11, fontWeight: 700, cursor: "pointer",
-                  color: category === cat ? t.invertText : t.inkSoft
-                }}>{cat}</button>
+                <button key={cat} type="button" onClick={function () { setCategory(cat); }} style={{ background: category === cat ? t.ink : "transparent", border: "1px solid " + (category === cat ? t.ink : t.lineStrong), borderRadius: 100, padding: "6px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer", color: category === cat ? t.invertText : t.inkSoft }}>{cat}</button>
               );
             })}
           </div>
@@ -263,6 +261,10 @@ function CreatePost(props) {
           {loading ? "Posting..." : "Post it"}
         </button>
       </form>
+
+      <div style={{ textAlign: "center", marginTop: 32, fontSize: 11, color: t.inkFaint }}>
+        © 2026 Mbuso Maphalala. All rights reserved.
+      </div>
     </div>
   );
 }
@@ -381,9 +383,4 @@ function MainApp(props) {
               posts.map(function (p) { return <PostCard key={p.id} post={p} onLike={handleLike} t={t} currentUserId={user.id} />; })
             )}
           </div>
-        ) : null}
-
-        {tab === "board" ? (
-          <div>
-            <Serif style={{ fontSize: 26, color: t.ink, display: "block", marginBottom: 4 }}>Today's Board</Serif>
-            <div style={{ fontSize: 12, color: t.inkSoft, margi
+        ) :
