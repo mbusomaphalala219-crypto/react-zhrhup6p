@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = "https://powgbthdngnlhzqmjcou.supabase.co";
@@ -27,6 +27,14 @@ function theme(dark) {
     shadow: dark ? "0 8px 24px rgba(0,0,0,0.4)" : "0 8px 24px rgba(0,0,0,0.08)",
     shadowSoft: dark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(0,0,0,0.05)"
   };
+}
+
+function labelStyle(t) {
+  return { fontSize: 11, fontWeight: 700, color: t.inkFaint, marginBottom: 6, letterSpacing: "0.04em" };
+}
+
+function inputStyle(t) {
+  return { width: "100%", background: t.surface, border: "1px solid " + t.lineStrong, borderRadius: 12, padding: "12px 14px", fontSize: 14, color: t.ink, outline: "none", fontFamily: "inherit", boxSizing: "border-box" };
 }
 
 function Serif(props) {
@@ -76,13 +84,13 @@ function Wordmark(props) {
 function AuthScreen(props) {
   var t = props.t;
   var onAuth = props.onAuth;
-  var [mode, setMode] = useState("login");
-  var [email, setEmail] = useState("");
-  var [password, setPassword] = useState("");
-  var [username, setUsername] = useState("");
-  var [loading, setLoading] = useState(false);
-  var [error, setError] = useState("");
-  var [message, setMessage] = useState("");
+  var mode = useState("login")[0], setMode = useState("login")[1];
+  var email = useState("")[0], setEmail = useState("")[1];
+  var password = useState("")[0], setPassword = useState("")[1];
+  var username = useState("")[0], setUsername = useState("")[1];
+  var loading = useState(false)[0], setLoading = useState(false)[1];
+  var error = useState("")[0], setError = useState("")[1];
+  var message = useState("")[0], setMessage = useState("")[1];
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -124,16 +132,16 @@ function AuthScreen(props) {
       ),
       React.createElement("form", { onSubmit: handleSubmit },
         mode === "signup" ? React.createElement("div", { style: { marginBottom: 16 } },
-          React.createElement("div", { style: { fontSize: 11, fontWeight: 700, color: t.inkFaint, marginBottom: 6 } }, "USERNAME"),
-          React.createElement("input", { type: "text", required: true, value: username, onChange: function(e) { setUsername(e.target.value); }, placeholder: "yourname", style: { width: "100%", background: t.surface, border: "1px solid " + t.lineStrong, borderRadius: 12, padding: "12px 14px", fontSize: 14, color: t.ink, outline: "none", fontFamily: "inherit", boxSizing: "border-box" } })
+          React.createElement("div", { style: labelStyle(t) }, "USERNAME"),
+          React.createElement("input", { type: "text", required: true, value: username, onChange: function(e) { setUsername(e.target.value); }, placeholder: "yourname", style: inputStyle(t) })
         ) : null,
         React.createElement("div", { style: { marginBottom: 16 } },
-          React.createElement("div", { style: { fontSize: 11, fontWeight: 700, color: t.inkFaint, marginBottom: 6 } }, "EMAIL"),
-          React.createElement("input", { type: "email", required: true, value: email, onChange: function(e) { setEmail(e.target.value); }, placeholder: "your@email.com", style: { width: "100%", background: t.surface, border: "1px solid " + t.lineStrong, borderRadius: 12, padding: "12px 14px", fontSize: 14, color: t.ink, outline: "none", fontFamily: "inherit", boxSizing: "border-box" } })
+          React.createElement("div", { style: labelStyle(t) }, "EMAIL"),
+          React.createElement("input", { type: "email", required: true, value: email, onChange: function(e) { setEmail(e.target.value); }, placeholder: "your@email.com", style: inputStyle(t) })
         ),
         React.createElement("div", { style: { marginBottom: 24 } },
-          React.createElement("div", { style: { fontSize: 11, fontWeight: 700, color: t.inkFaint, marginBottom: 6 } }, "PASSWORD"),
-          React.createElement("input", { type: "password", required: true, value: password, onChange: function(e) { setPassword(e.target.value); }, placeholder: "••••••••", style: { width: "100%", background: t.surface, border: "1px solid " + t.lineStrong, borderRadius: 12, padding: "12px 14px", fontSize: 14, color: t.ink, outline: "none", fontFamily: "inherit", boxSizing: "border-box" } })
+          React.createElement("div", { style: labelStyle(t) }, "PASSWORD"),
+          React.createElement("input", { type: "password", required: true, value: password, onChange: function(e) { setPassword(e.target.value); }, placeholder: "••••••••", style: inputStyle(t) })
         ),
         error ? React.createElement("div", { style: { fontSize: 12, color: "salmon", marginBottom: 14, textAlign: "center" } }, error) : null,
         message ? React.createElement("div", { style: { fontSize: 12, color: "lightgreen", marginBottom: 14, textAlign: "center" } }, message) : null,
@@ -149,7 +157,7 @@ function PostCard(props) {
   var onLike = props.onLike;
   var t = props.t;
   var currentUserId = props.currentUserId;
-  var [pulse, setPulse] = useState(false);
+  var pulse = useState(false)[0], setPulse = useState(false)[1];
   var liked = post.liked_by_user;
 
   function tap() {
@@ -177,7 +185,7 @@ function PostCard(props) {
             React.createElement("div", { style: { fontSize: 11, color: "rgba(255,255,255,0.75)", marginTop: 1 } }, post.caption)
           )
         ),
-        React.createElement("button", { onClick: tap, style: { background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 2, transform: pulse ? "scale(1.25)" : "scale(1)", transition: "transform 0.2s" } },
+        React.createElement("button", { onClick: tap, style: { background: "none", border: "none", cursor: liked ? "default" : "pointer", padding: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 2, transform: pulse ? "scale(1.25)" : "scale(1)", transition: "transform 0.2s" } },
           React.createElement("svg", { width: 26, height: 26, viewBox: "0 0 24 24", fill: liked ? "#fff" : "none", stroke: "#fff", strokeWidth: 1.8 },
             React.createElement("path", { d: "M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" })
           ),
@@ -188,16 +196,33 @@ function PostCard(props) {
   );
 }
 
+/* ---------- CreatePost: original layout + real camera/library upload ---------- */
 function CreatePost(props) {
   var t = props.t;
   var userId = props.userId;
   var onPost = props.onPost;
   var onCancel = props.onCancel;
-  var [caption, setCaption] = useState("");
-  var [category, setCategory] = useState("Vibes");
-  var [imageUrl, setImageUrl] = useState("");
-  var [loading, setLoading] = useState(false);
-  var [error, setError] = useState("");
+
+  var caption = useState("")[0], setCaption = useState("")[1];
+  var category = useState("Vibes")[0], setCategory = useState("Vibes")[1];
+  var file = useState(null)[0], setFile = useState(null)[1];
+  var preview = useState(null)[0], setPreview = useState(null)[1];
+  var mediaType = useState(null)[0], setMediaType = useState(null)[1];
+  var loading = useState(false)[0], setLoading = useState(false)[1];
+  var error = useState("")[0], setError = useState("")[1];
+
+  function pickFile(f) {
+    if (!f) return;
+    setFile(f);
+    setMediaType(f.type.indexOf("video") === 0 ? "video" : "image");
+    setPreview(URL.createObjectURL(f));
+  }
+
+  function removeFile() {
+    setFile(null);
+    setPreview(null);
+    setMediaType(null);
+  }
 
   async function submit(e) {
     e.preventDefault();
@@ -205,7 +230,27 @@ function CreatePost(props) {
     setLoading(true);
     setError("");
     try {
-      var result = await supabase.from("posts").insert({ user_id: userId, caption: caption.trim(), category: category, image_url: imageUrl.trim() || null, like_count: 0 });
+      var uploadedUrl = null;
+
+      if (file) {
+        var ext = file.name.split(".").pop();
+        var path = userId + "/" + Date.now() + "." + ext;
+        var uploadResult = await supabase.storage.from("posts").upload(path, file, {
+          cacheControl: "3600",
+          upsert: false
+        });
+        if (uploadResult.error) throw uploadResult.error;
+        var publicUrlResult = supabase.storage.from("posts").getPublicUrl(path);
+        uploadedUrl = publicUrlResult.data.publicUrl;
+      }
+
+      var result = await supabase.from("posts").insert({
+        user_id: userId,
+        caption: caption.trim(),
+        category: category,
+        image_url: uploadedUrl,
+        like_count: 0
+      });
       if (result.error) throw result.error;
       onPost();
     } catch (err) {
@@ -224,15 +269,42 @@ function CreatePost(props) {
     ),
     React.createElement("form", { onSubmit: submit },
       React.createElement("div", { style: { marginBottom: 16 } },
-        React.createElement("div", { style: { fontSize: 11, fontWeight: 700, color: t.inkFaint, marginBottom: 6 } }, "CAPTION"),
-        React.createElement("textarea", { required: true, value: caption, onChange: function(e) { setCaption(e.target.value); }, placeholder: "Say something...", maxLength: 200, style: { width: "100%", background: t.surface, border: "1px solid " + t.lineStrong, borderRadius: 12, padding: "12px 14px", fontSize: 14, color: t.ink, outline: "none", fontFamily: "inherit", boxSizing: "border-box", resize: "none", height: 80 } })
+        React.createElement("div", { style: labelStyle(t) }, "CAPTION"),
+        React.createElement("textarea", { required: true, value: caption, onChange: function(e) { setCaption(e.target.value); }, placeholder: "Say something...", maxLength: 200, style: Object.assign({}, inputStyle(t), { resize: "none", height: 80 }) })
       ),
+
       React.createElement("div", { style: { marginBottom: 16 } },
-        React.createElement("div", { style: { fontSize: 11, fontWeight: 700, color: t.inkFaint, marginBottom: 6 } }, "IMAGE URL (optional)"),
-        React.createElement("input", { type: "url", value: imageUrl, onChange: function(e) { setImageUrl(e.target.value); }, placeholder: "https://...", style: { width: "100%", background: t.surface, border: "1px solid " + t.lineStrong, borderRadius: 12, padding: "12px 14px", fontSize: 14, color: t.ink, outline: "none", fontFamily: "inherit", boxSizing: "border-box" } })
+        React.createElement("div", { style: labelStyle(t) }, "PHOTO OR VIDEO (optional \u00B7 videos \u2264 60s)"),
+        React.createElement("label", {
+          style: {
+            display: "block",
+            border: "1px dashed " + t.lineStrong,
+            borderRadius: 12,
+            padding: preview ? 0 : 24,
+            textAlign: "center",
+            cursor: "pointer",
+            background: t.surface,
+            overflow: "hidden"
+          }
+        },
+          preview ? (
+            mediaType === "video"
+              ? React.createElement("video", { src: preview, controls: true, playsInline: true, style: { display: "block", width: "100%", maxHeight: 320, objectFit: "cover", background: "#000" } })
+              : React.createElement("img", { src: preview, alt: "preview", style: { display: "block", width: "100%", maxHeight: 260, objectFit: "cover" } })
+          ) : React.createElement("div", { style: { fontSize: 12, color: t.inkSoft } }, "Tap to take a photo/video or choose from library"),
+          React.createElement("input", {
+            type: "file",
+            accept: "image/*,video/*",
+            capture: "environment",
+            onChange: function(e) { pickFile(e.target.files && e.target.files[0] ? e.target.files[0] : null); },
+            style: { display: "none" }
+          })
+        ),
+        preview ? React.createElement("button", { type: "button", onClick: removeFile, style: { marginTop: 8, background: "none", border: "none", color: t.inkSoft, fontSize: 11, cursor: "pointer", textDecoration: "underline" } }, "Remove " + mediaType) : null
       ),
+
       React.createElement("div", { style: { marginBottom: 28 } },
-        React.createElement("div", { style: { fontSize: 11, fontWeight: 700, color: t.inkFaint, marginBottom: 10 } }, "CATEGORY"),
+        React.createElement("div", { style: Object.assign({}, labelStyle(t), { marginBottom: 10 }) }, "CATEGORY"),
         React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: 8 } },
           CATEGORIES.filter(function(c) { return c !== "All"; }).map(function(cat) {
             return React.createElement("button", { key: cat, type: "button", onClick: function() { setCategory(cat); }, style: { background: category === cat ? t.ink : "transparent", border: "1px solid " + (category === cat ? t.ink : t.lineStrong), borderRadius: 100, padding: "6px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer", color: category === cat ? t.invertText : t.inkSoft } }, cat);
@@ -240,74 +312,53 @@ function CreatePost(props) {
         )
       ),
       error ? React.createElement("div", { style: { fontSize: 12, color: "salmon", marginBottom: 14 } }, error) : null,
-      React.createElement("button", { type: "submit", disabled: loading || !caption.trim(), style: { width: "100%", background: caption.trim() ? t.invert : t.line, color: caption.trim() ? t.invertText : t.inkFaint, border: "none", borderRadius: 100, padding: "14px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" } }, loading ? "Posting..." : "Post it")
+      React.createElement("button", { type: "submit", disabled: loading || !caption.trim(), style: { width: "100%", background: caption.trim() ? t.invert : t.line, color: caption.trim() ? t.invertText : t.inkFaint, border: "none", borderRadius: 100, padding: "14px 0", fontSize: 14, fontWeight: 700, cursor: caption.trim() ? "pointer" : "not-allowed" } }, loading ? "Posting..." : "Post it")
     ),
     React.createElement("div", { style: { textAlign: "center", marginTop: 32, fontSize: 11, color: t.inkFaint } }, "\u00A9 2026 Mbuso Maphalala. All rights reserved.")
   );
 }
 
-function MainApp(props) {
-  var user = props.user;
+/* ---------- Podium (top 3 leaderboard for Board tab) ---------- */
+function Podium(props) {
+  var posts = props.posts;
+  var t = props.t;
+  var top3 = posts.slice(0, 3);
+  if (top3.length === 0) {
+    return React.createElement("div", { style: { textAlign: "center", padding: "60px 0", color: t.inkFaint, fontSize: 13 } }, "No posts on the board yet.");
+  }
+  var order = top3.length === 3 ? [1, 0, 2] : top3.map(function(_, i) { return i; });
+  return React.createElement("div", { style: { display: "flex", alignItems: "flex-end", justifyContent: "center", gap: 12, marginBottom: 32 } },
+    order.map(function(idx) {
+      var p = top3[idx];
+      if (!p) return null;
+      var height = idx === 0 ? 190 : idx === 1 ? 150 : 120;
+      return React.createElement("div", { key: p.id, style: { width: 100, display: "flex", flexDirection: "column", alignItems: "center" } },
+        React.createElement("div", { style: { fontSize: 11, fontWeight: 700, color: t.inkFaint, marginBottom: 6 } }, "#" + (idx + 1)),
+        React.createElement("div", {
+          style: {
+            width: "100%", height: height, borderRadius: 14, backgroundImage: p.image_url ? "url(" + p.image_url + ")" : "none",
+            backgroundColor: p.image_url ? "transparent" : t.surfaceRaised, backgroundSize: "cover", backgroundPosition: "center",
+            border: "1px solid " + t.line, marginBottom: 8, position: "relative", overflow: "hidden"
+          }
+        },
+          React.createElement("div", { style: { position: "absolute", inset: 0, background: "linear-gradient(180deg,transparent 50%,rgba(0,0,0,0.6) 100%)" } }),
+          React.createElement("div", { style: { position: "absolute", bottom: 6, left: 0, right: 0, textAlign: "center", fontSize: 11, fontWeight: 700, color: "#fff" } }, fmt(p.like_count || 0))
+        ),
+        React.createElement("div", { style: { fontSize: 11, color: t.inkSoft, textAlign: "center" } }, "@" + (p.profiles ? p.profiles.username : "unknown"))
+      );
+    })
+  );
+}
+
+/* ---------- Profile tab ---------- */
+function ProfileTab(props) {
+  var t = props.t;
   var profile = props.profile;
-  var dark = props.dark;
-  var toggle = props.toggle;
-  var onSignOut = props.onSignOut;
-  var t = theme(dark);
-  var [posts, setPosts] = useState([]);
-  var [tab, setTab] = useState("feed");
-  var [activeCategory, setActiveCategory] = useState("All");
-  var [loading, setLoading] = useState(true);
-  var [showCreate, setShowCreate] = useState(false);
+  var myPosts = props.myPosts;
+  var onNewPost = props.onNewPost;
+  var onDelete = props.onDelete;
+  var totalLikes = myPosts.reduce(function(sum, p) { return sum + (p.like_count || 0); }, 0);
 
-  useEffect(function() { fetchPosts(); }, [activeCategory]);
-
-  async function fetchPosts() {
-    setLoading(true);
-    try {
-      var query = supabase.from("posts").select("*, profiles(username)").gt("expires_at", new Date().toISOString()).order("like_count", { ascending: false }).limit(20);
-      if (activeCategory !== "All") { query = query.eq("category", activeCategory); }
-      var result = await query;
-      if (result.error) throw result.error;
-      var likedResult = await supabase.from("likes").select("post_id").eq("user_id", user.id);
-      var likedIds = new Set((likedResult.data || []).map(function(l) { return l.post_id; }));
-      setPosts((result.data || []).map(function(p) { return Object.assign({}, p, { liked_by_user: likedIds.has(p.id) }); }));
-    } catch (err) { console.error(err); } finally { setLoading(false); }
-  }
-
-  async function handleLike(postId) {
-    try {
-      await supabase.from("likes").insert({ user_id: user.id, post_id: postId });
-      await supabase.rpc("increment_likes", { post_id: postId });
-      setPosts(function(prev) { return prev.map(function(p) { return p.id === postId ? Object.assign({}, p, { liked_by_user: true, like_count: (p.like_count || 0) + 1 }) : p; }); });
-    } catch (err) { console.error(err); }
-  }
-
-  if (showCreate) {
-    return React.createElement(CreatePost, { t: t, userId: user.id, onPost: function() { setShowCreate(false); fetchPosts(); }, onCancel: function() { setShowCreate(false); } });
-  }
-
-  return React.createElement("div", { style: { background: t.bg, minHeight: "100vh", width: "100%", fontFamily: "-apple-system, system-ui, sans-serif", boxSizing: "border-box" } },
-    React.createElement("div", { style: { padding: "52px 20px 0", position: "sticky", top: 0, background: t.bg, zIndex: 100 } },
-      React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 } },
-        React.createElement(Wordmark, { t: t }),
-        React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10 } },
-          React.createElement(ThemeToggle, { dark: dark, onToggle: toggle, t: t }),
-          React.createElement("button", { onClick: onSignOut, style: { background: "none", border: "none", cursor: "pointer", fontSize: 11, color: t.inkFaint, fontWeight: 600 } }, "Out")
-        )
-      ),
-      React.createElement("div", { style: { display: "flex", gap: 20, borderBottom: "1px solid " + t.line } },
-        [["feed","Feed"],["board","Board"],["profile","Profile"]].map(function(item) {
-          return React.createElement("button", { key: item[0], onClick: function() { setTab(item[0]); }, style: { background: "none", border: "none", cursor: "pointer", padding: "9px 0", fontSize: 13, fontWeight: 600, color: tab === item[0] ? t.ink : t.inkFaint, borderBottom: tab === item[0] ? "2px solid " + t.ink : "2px solid transparent" } }, item[1]);
-        })
-      ),
-      tab === "feed" ? React.createElement("div", { style: { display: "flex", gap: 8, overflowX: "auto", padding: "12px 0 8px", scrollbarWidth: "none" } },
-        CATEGORIES.map(function(cat) {
-          return React.createElement("button", { key: cat, onClick: function() { setActiveCategory(cat); }, style: { flexShrink: 0, background: activeCategory === cat ? t.ink : "transparent", border: "1px solid " + (activeCategory === cat ? t.ink : t.lineStrong), borderRadius: 100, padding: "6px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer", color: activeCategory === cat ? t.invertText : t.inkSoft } }, cat.toUpperCase());
-        })
-      ) : null
-    ),
-    React.createElement("div", { style: { padding: "16px 20px 100px", maxWidth: 480, margin: "0 auto" } },
-      tab === "feed" ? React.createElement("div", null,
-        loading ? React.createElement("div", { style: { textAlign: "center", padding: "60px 0", color: t.inkFaint, fontSize: 13 } }, "Loading...") :
-        posts.length === 0 ? React.createElement("div", { style: { textAlign: "center", padding: "60px 0" } },
-          
+  return React.createElement("div", null,
+    React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 14, marginBottom: 24, marginTop: 16 } },
+      React.createElement("div", { style: { width: 56, height: 56, borderRadius: "50%", background: t.surfaceRaised, border: "1px solid " + t.lineStrong, display: "
